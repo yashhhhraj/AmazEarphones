@@ -17,7 +17,7 @@ NEWSPIDER_MODULE = 'amazScrape.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'amazScrape (+http://www.yourdomain.com)'
-USER_AGENT = 'amazScrape (+https://developers.google.com/webmasters/APIs-Google.html)'
+#USER_AGENT = 'amazon_scraper (+https://developers.google.com/webmasters/APIs-Google.html)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -56,6 +56,11 @@ ROBOTSTXT_OBEY = True
 #DOWNLOADER_MIDDLEWARES = {
 #    'amazScrape.middlewares.AmazscrapeDownloaderMiddleware': 543,
 #}
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+}
+
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
