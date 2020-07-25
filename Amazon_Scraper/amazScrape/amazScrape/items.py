@@ -10,15 +10,16 @@ from scrapy.loader.processors import MapCompose, TakeFirst
 from w3lib.html import remove_tags
 
 
-class amazScrapeItem(scrapy.Item):
+class Earphone(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    prodName = scrapy.Field(
-        input_processor = MapCompose(remove_tags),
-        output_processor = TakeFirst()
-
-    )
-    prodPrice = scrapy.Field()
+    title = scrapy.Field()
+    price = scrapy.Field()
+    instock = scrapy.Field()
+    description = scrapy.Field()
+    image_urls = scrapy.Field()
+    asin = scrapy.Field()   
+    rating = scrapy.Field() 
     
 class Mobile(scrapy.Item):
     title = scrapy.Field()
@@ -31,3 +32,13 @@ class Mobile(scrapy.Item):
     images = scrapy.Field()
     asin = scrapy.Field()
     
+class Laptop(scrapy.Item):
+    title = scrapy.Field()
+    rating = scrapy.Field()
+    price = scrapy.Field()
+    colour = scrapy.Field()
+    instock = scrapy.Field()
+    description = scrapy.Field()
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
+    asin = scrapy.Field()
