@@ -14,7 +14,11 @@ class AmazonScraper(scrapy.Spider):
     def start_requests(self):
         # starting urls for scraping
         urls = [
-            "https://www.amazon.in/s?k=earphones&ref=nb_sb_noss"
+            "https://www.amazon.in/s?k=earphones&i=computers&ref=nb_sb_noss_2",
+            "https://www.amazon.in/s?k=earphones&i=computers&page=2&qid=1595754535&ref=sr_pg_2",
+            "https://www.amazon.in/s?k=earphones&i=computers&page=3&qid=1595754560&ref=sr_pg_3",
+            "https://www.amazon.in/s?k=earphones&i=computers&page=4&qid=1595754578&ref=sr_pg_4",
+            "https://www.amazon.in/s?k=earphones&i=computers&page=5&qid=1595754592&ref=sr_pg_5"
         ]
 
         for url in urls: yield scrapy.Request(url = url, callback = self.parse, headers = self.headers)
@@ -60,7 +64,7 @@ class AmazonScraper(scrapy.Spider):
         instock = response.xpath("//div[@id='availability']").xpath("//span[@class='a-size-medium a-color-success']//text()").get() or "Out Stock"
         instock = instock.strip() == "In stock."
         description_raw = response.xpath("//div[@id='featurebullets_feature_div']//span[@class='a-list-item']//text()").getall()
-        asin = response.xpath("//*[@id='prodDetails']/div[2]/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract()
+        asin = response.xpath("//*[@id='prodDetails']/div[2]/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract() or response.xpath("//*[@id='prodDetails']/div/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract()
         img_url = response.xpath("//img[@id='landingImage']/@data-old-hires").get() or response.xpath("//img[@id='imgBlkFront']/@src").get()
 
         description = []
@@ -73,4 +77,4 @@ class AmazonScraper(scrapy.Spider):
         # brand = brand.strip(),
         #description = description,
 
-        yield Earphone(title = title.strip(), asin = asin, rating = rating.strip(), price = price.strip(), image_urls = [img_url])
+        yield Earphone(title = title.strip(), asin = asin, rating = rating.strip(), price = price.strip(),description = description, image_urls = [img_url])

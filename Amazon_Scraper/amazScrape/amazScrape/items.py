@@ -42,3 +42,14 @@ class Laptop(scrapy.Item):
     image_urls = scrapy.Field()
     images = scrapy.Field()
     asin = scrapy.Field()
+
+class Speaker(scrapy.Item):
+    title = scrapy.Field()
+    rating = scrapy.Field()
+    price = scrapy.Field()
+    colour = scrapy.Field()
+    instock = scrapy.Field()
+    description = scrapy.Field()
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
+    asin = scrapy.Field()

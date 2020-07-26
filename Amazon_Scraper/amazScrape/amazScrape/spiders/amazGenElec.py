@@ -1,8 +1,8 @@
 import scrapy
-from ..items import Laptop
+from ..items import Speaker
 
 class AmazonScraper(scrapy.Spider):
-    name = "amazLaptops"
+    name = "amazGenElec"
 
     # How many pages you want to scrape
     no_of_pages = 1
@@ -14,11 +14,9 @@ class AmazonScraper(scrapy.Spider):
     def start_requests(self):
         # starting urls for scraping
         urls = [
-            "https://www.amazon.in/s?k=laptop&ref=nb_sb_noss_2",
-            "https://www.amazon.in/s?k=laptops&page=2&qid=1595754019&ref=sr_pg_2",
-            "https://www.amazon.in/s?k=laptops&page=3&qid=1595754029&ref=sr_pg_3",
-            "https://www.amazon.in/s?k=laptops&page=4&qid=1595754053&ref=sr_pg_4",
-            "https://www.amazon.in/s?k=laptops&page=5&qid=1595754069&ref=sr_pg_5"
+            "https://www.amazon.in/s?k=ps4&rh=n%3A4092115031&ref=nb_sb_noss",#playstation
+            "https://www.amazon.in/s?k=fitness+band&rh=n%3A4092115031&ref=nb_sb_noss",#fitness bands
+            "https://www.amazon.in/s?k=andriod+tv&ref=nb_sb_noss_2"#android TV
         ]
 
         for url in urls: yield scrapy.Request(url = url, callback = self.parse, headers = self.headers)
@@ -29,13 +27,13 @@ class AmazonScraper(scrapy.Spider):
 
         # print(response.text)
 
-        laptops = response.xpath("//a[@class='a-link-normal a-text-normal']").xpath("@href").getall()
+        speakers = response.xpath("//a[@class='a-link-normal a-text-normal']").xpath("@href").getall()
         
         # print(len(laptops))
 
-        for laptop in laptops:
-            final_url = response.urljoin(laptop)
-            yield scrapy.Request(url=final_url, callback = self.parse_laptop, headers = self.headers)
+        for speaker in speakers:
+            final_url = response.urljoin(speaker)
+            yield scrapy.Request(url=final_url, callback = self.parse_speaker, headers = self.headers)
             # break
             # print(final_url)
 
@@ -49,7 +47,7 @@ class AmazonScraper(scrapy.Spider):
             final_url = response.urljoin(next_page_url)
             yield scrapy.Request(url = final_url, callback = self.parse, headers = self.headers)
 
-    def parse_laptop(self, response):
+    def parse_speaker(self, response):
         title = response.xpath("//span[@id='productTitle']//text()").get() or response.xpath("//h1[@id='title']//text()").get()
         #brand = response.xpath("//a[@id='bylineInfo']//text()").get() or "not specified"
         rating = response.xpath("//div[@id='averageCustomerReviews_feature_div']").xpath("//span[@class='a-icon-alt']//text()").get()
@@ -75,4 +73,4 @@ class AmazonScraper(scrapy.Spider):
         # print(description)
         # brand = brand.strip(),
 
-        yield Laptop(title = title.strip(), asin = asin, rating = rating.strip(), price = price.strip(), colour = colour.strip(), instock = instock, description = description, image_urls = [img_url])
+        yield Speaker(title = title.strip(), asin = asin, rating = rating.strip(), price = price.strip(), colour = colour.strip(), instock = instock, description = description, image_urls = [img_url])
