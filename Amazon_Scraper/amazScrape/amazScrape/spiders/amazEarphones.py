@@ -40,9 +40,9 @@ class AmazonScraper(scrapy.Spider):
             # print(final_url)
 
         # print(response.body)
-        # title = response.xpath("//span[@class='a-size-medium a-color-base a-text-normal']//text()").getall()
-        # title = response.css('span').getall()
-        # print(title)
+        # product_name = response.xpath("//span[@class='a-size-medium a-color-base a-text-normal']//text()").getall()
+        # product_name = response.css('span').getall()
+        # print(product_name)
         
         if(self.no_of_pages > 0):
             next_page_url = response.xpath("//ul[@class='a-pagination']/li[@class='a-last']/a").xpath("@href").get()
@@ -50,7 +50,7 @@ class AmazonScraper(scrapy.Spider):
             yield scrapy.Request(url = final_url, callback = self.parse, headers = self.headers)
 
     def parse_ep(self, response):
-        title = response.xpath("//span[@id='productTitle']//text()").get() or response.xpath("//h1[@id='title']//text()").get()
+        product_name = response.xpath("//span[@id='productTitle']//text()").get() or response.xpath("//h1[@id='title']//text()").get()
         #brand = response.xpath("//a[@id='bylineInfo']//text()").get() or "not specified"
         rating = response.xpath("//div[@id='averageCustomerReviews_feature_div']").xpath("//span[@class='a-icon-alt']//text()").get()
 
@@ -66,15 +66,15 @@ class AmazonScraper(scrapy.Spider):
         description_raw = response.xpath("//div[@id='featurebullets_feature_div']//span[@class='a-list-item']//text()").getall()
         asin = response.xpath("//*[@id='prodDetails']/div[2]/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract() or response.xpath("//*[@id='prodDetails']/div/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract()
         img_url = response.xpath("//img[@id='landingImage']/@data-old-hires").get() or response.xpath("//img[@id='imgBlkFront']/@src").get()
-
+        category = 'Earphones and Headphones'
         description = []
         for description_temp in description_raw:
             description.append(description_temp.strip())
 
-        print(title, asin, rating, price, instock, img_url)
+        print(product_name, asin, rating, price, instock, img_url)
         # print(description)
         #instock = instock,
         # brand = brand.strip(),
         #description = description,
 
-        yield Earphone(title = title.strip(), asin = asin, rating = rating.strip(), price = price.strip(),description = description, image_urls = [img_url])
+        yield Earphone(product_name = product_name.strip(), asin = asin, rating = rating.strip(), price = price.strip(), category = category  ,description = description, image_urls = [img_url])

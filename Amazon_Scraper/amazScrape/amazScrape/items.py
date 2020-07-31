@@ -13,7 +13,9 @@ from w3lib.html import remove_tags
 class Earphone(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    title = scrapy.Field()
+    category = scrapy.Field()
+    subcategory = scrapy.Field()
+    product_name = scrapy.Field()
     price = scrapy.Field()
     instock = scrapy.Field()
     description = scrapy.Field()
@@ -22,7 +24,9 @@ class Earphone(scrapy.Item):
     rating = scrapy.Field() 
     
 class Mobile(scrapy.Item):
-    title = scrapy.Field()
+    category = scrapy.Field()
+    subcategory = scrapy.Field()
+    product_name = scrapy.Field()
     rating = scrapy.Field()
     price = scrapy.Field()
     colour = scrapy.Field()
@@ -33,7 +37,9 @@ class Mobile(scrapy.Item):
     asin = scrapy.Field()
     
 class Laptop(scrapy.Item):
-    title = scrapy.Field()
+    category = scrapy.Field()
+    subcategory = scrapy.Field()
+    product_name = scrapy.Field()
     rating = scrapy.Field()
     price = scrapy.Field()
     colour = scrapy.Field()
@@ -44,7 +50,9 @@ class Laptop(scrapy.Item):
     asin = scrapy.Field()
 
 class Speaker(scrapy.Item):
-    title = scrapy.Field()
+    category = scrapy.Field()
+    subcategory = scrapy.Field()
+    product_name = scrapy.Field()
     rating = scrapy.Field()
     price = scrapy.Field()
     colour = scrapy.Field()

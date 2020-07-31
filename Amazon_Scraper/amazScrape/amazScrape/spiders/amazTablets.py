@@ -39,9 +39,9 @@ class AmazonScraper(scrapy.Spider):
             # print(final_url)
 
         # print(response.body)
-        # title = response.xpath("//span[@class='a-size-medium a-color-base a-text-normal']//text()").getall()
-        # title = response.css('span').getall()
-        # print(title)
+        # product_name = response.xpath("//span[@class='a-size-medium a-color-base a-text-normal']//text()").getall()
+        # product_name = response.css('span').getall()
+        # print(product_name)
         
         if(self.no_of_pages > 0):
             next_page_url = response.xpath("//ul[@class='a-pagination']/li[@class='a-last']/a").xpath("@href").get()
@@ -49,7 +49,7 @@ class AmazonScraper(scrapy.Spider):
             yield scrapy.Request(url = final_url, callback = self.parse, headers = self.headers)
 
     def parse_speaker(self, response):
-        title = response.xpath("//span[@id='productTitle']//text()").get() or response.xpath("//h1[@id='title']//text()").get()
+        product_name = response.xpath("//span[@id='productTitle']//text()").get() or response.xpath("//h1[@id='title']//text()").get()
         #brand = response.xpath("//a[@id='bylineInfo']//text()").get() or "not specified"
         rating = response.xpath("//div[@id='averageCustomerReviews_feature_div']").xpath("//span[@class='a-icon-alt']//text()").get()
 
@@ -69,9 +69,11 @@ class AmazonScraper(scrapy.Spider):
         description = []
         for description_temp in description_raw:
             description.append(description_temp.strip())
+        
+        category = 'Tablets'
 
-        print(title, rating, price, colour, instock, img_url)
+        print(product_name, rating, price, colour, instock, img_url)
         # print(description)
         # brand = brand.strip(),
 
-        yield Speaker(title = title.strip(), asin = asin, rating = rating.strip(), price = price.strip(), colour = colour.strip(), instock = instock, description = description, image_urls = [img_url])
+        yield Speaker(product_name = product_name.strip(), asin = asin, rating = rating.strip(), price = price.strip(),category = category, colour = colour.strip(), instock = instock, description = description, image_urls = [img_url])
