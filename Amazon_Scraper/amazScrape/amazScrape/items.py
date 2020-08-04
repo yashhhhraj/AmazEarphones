@@ -10,46 +10,9 @@ from scrapy.loader.processors import MapCompose, TakeFirst
 from w3lib.html import remove_tags
 
 
-class Earphone(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    category = scrapy.Field()
-    subcategory = scrapy.Field()
-    product_name = scrapy.Field()
-    price = scrapy.Field()
-    instock = scrapy.Field()
-    description = scrapy.Field()
-    image_urls = scrapy.Field()
-    asin = scrapy.Field()   
-    rating = scrapy.Field() 
-    
-class Mobile(scrapy.Item):
-    category = scrapy.Field()
-    subcategory = scrapy.Field()
-    product_name = scrapy.Field()
-    rating = scrapy.Field()
-    price = scrapy.Field()
-    colour = scrapy.Field()
-    instock = scrapy.Field()
-    description = scrapy.Field()
-    image_urls = scrapy.Field()
-    images = scrapy.Field()
-    asin = scrapy.Field()
-    
-class Laptop(scrapy.Item):
-    category = scrapy.Field()
-    subcategory = scrapy.Field()
-    product_name = scrapy.Field()
-    rating = scrapy.Field()
-    price = scrapy.Field()
-    colour = scrapy.Field()
-    instock = scrapy.Field()
-    description = scrapy.Field()
-    image_urls = scrapy.Field()
-    images = scrapy.Field()
-    asin = scrapy.Field()
-
-class Speaker(scrapy.Item):
+class Electr(scrapy.Item):
+    stores = scrapy.Field()
+    iurl = scrapy.Field()
     category = scrapy.Field()
     subcategory = scrapy.Field()
     product_name = scrapy.Field()
