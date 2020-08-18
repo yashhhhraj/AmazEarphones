@@ -1,16 +1,13 @@
-import scrapy
+import scrapy, random, string
 from ..items import Electr
 
 class AmazonScraper(scrapy.Spider):
     name = "amazEarphones"
-
     # How many pages you want to scrape
     no_of_pages = 1
-
     # Headers to fix 503 service unavailable error
     # Spoof headers to force servers to think that request coming from browser ;)
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101 Firefox/78.0'}
-
     def start_requests(self):
         # starting urls for scraping
         urls = ["https://www.amazon.in/s?k=earphone&ref=nb_sb_noss_2",
@@ -19,7 +16,6 @@ class AmazonScraper(scrapy.Spider):
                 "https://www.amazon.in/s?k=earphones&page=4&qid=1596553057&ref=sr_pg_4",
                 "https://www.amazon.in/s?k=earphones&page=5&qid=1596553075&ref=sr_pg_5"
         ]
-
         for url in urls: yield scrapy.Request(url = url, callback = self.parse, headers = self.headers)
 
 
@@ -77,7 +73,7 @@ class AmazonScraper(scrapy.Spider):
         instock = instock.strip() == "In stock."
         description_raw = response.xpath("//div[@id='featurebullets_feature_div']//span[@class='a-list-item']//text()").getall()
         #asin = response.xpath("//*[@id='prodDetails']/div[2]/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract() or response.xpath("//*[@id='prodDetails']/div/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract()
-        img_url = response.xpath("//img[@id='landingImage']/@data-old-hires").get() or response.xpath("//img[@id='imgBlkFront']/@src").get()
+        photos = response.xpath("//img[@id='landingImage']/@data-old-hires").get() or response.xpath("//img[@id='imgBlkFront']/@src").get()
         category = 'Electronics'
         subcategory = 'Earphones'
         description = ''
@@ -87,9 +83,11 @@ class AmazonScraper(scrapy.Spider):
 
         description = description[:-2]
 
-        print(product_name, rating, price, colour, instock, img_url)
+        print(product_name, rating, price, colour, instock, photos)
         # print(description)
         # brand = brand.strip(),
         #iurl = iurl, asin = asin, price = ''.join([c for c in price if c in '1234567890.'])[:-3], colour = colour.strip(), instock = instock, rating = rating.strip(),
+        product_id = ''.join(random.sample(string.ascii_lowercase+string.digits,15)) #random 15 len alphanumeric id
+        pp = Electr( product_name = product_name.strip(),product_id = product_id ,stores = stores,category = category,subcategory = subcategory, description = description, image_urls = [photos])
 
-        yield Electr( product_name = product_name.strip(),stores = stores,category = category,subcategory = subcategory, description = description, image_urls = [img_url])
+        yield pp

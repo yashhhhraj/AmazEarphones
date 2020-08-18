@@ -1,10 +1,8 @@
-import scrapy, random, string
+import scrapy
 from ..items import Electr
 
-
-
 class AmazonScraper(scrapy.Spider):
-    name = "amazMobiles"
+    name = "test"
 
     # How many pages you want to scrape
     no_of_pages = 1
@@ -15,18 +13,7 @@ class AmazonScraper(scrapy.Spider):
 
     def start_requests(self):
         # starting urls for scraping
-        urls = ["https://www.amazon.in/s?k=mobile&ref=nb_sb_noss_2",
-                "https://www.amazon.in/s?k=mobile&page=2&qid=1596552187&ref=sr_pg_2",
-                "https://www.amazon.in/s?k=mobile&page=3&qid=1596552208&ref=sr_pg_3",
-                "https://www.amazon.in/s?k=mobile&page=4&qid=1596552224&ref=sr_pg_4",
-                "https://www.amazon.in/s?k=mobile&page=5&qid=1596552244&ref=sr_pg_5",
-                "https://www.amazon.in/s?k=mobile&page=6&qid=1596552262&ref=sr_pg_6",
-                "https://www.amazon.in/s?k=mobile&page=7&qid=1596552276&ref=sr_pg_7",
-                "https://www.amazon.in/s?k=mobile&page=8&qid=1596552292&ref=sr_pg_8",
-                "https://www.amazon.in/s?k=mobile&page=9&qid=1596552310&ref=sr_pg_9",
-                "https://www.amazon.in/s?k=mobile&page=10&qid=1597356990&ref=sr_pg_10",
-                "https://www.amazon.in/s?k=mobile&page=11&qid=1597357001&ref=sr_pg_11"
-        ]
+        urls = ["https://www.amazon.in/s?k=mobile&ref=nb_sb_noss_2"]
 
         for url in urls: yield scrapy.Request(url = url, callback = self.parse, headers = self.headers)
 
@@ -78,12 +65,14 @@ class AmazonScraper(scrapy.Spider):
             "storeName": "amazon",
             "storePrice": ''.join([c for c in price if c in '1234567890.'])[:-3]
         }]
+
+
         colour = response.xpath("//div[@id='variation_color_name']/div/span[@class='selection']//text()").get() or "not defined"
         instock = response.xpath("//div[@id='availability']").xpath("//span[@class='a-size-medium a-color-success']//text()").get() or "Out Stock"
         instock = instock.strip() == "In stock."
         description_raw = response.xpath("//div[@id='featurebullets_feature_div']//span[@class='a-list-item']//text()").getall()
         #asin = response.xpath("//*[@id='prodDetails']/div[2]/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract() or response.xpath("//*[@id='prodDetails']/div/div[2]/div[1]/div[2]/div/div/table/tbody/tr[1]/td[2]//text()").extract()
-        photos = response.xpath("//img[@id='landingImage']/@data-old-hires").get() or response.xpath("//img[@id='imgBlkFront']/@src").get()
+        img_url = response.xpath("//img[@id='landingImage']/@data-old-hires").get() or response.xpath("//img[@id='imgBlkFront']/@src").get()
         category = 'Electronics'
         subcategory = 'Mobiles'
         description = ''
@@ -92,11 +81,10 @@ class AmazonScraper(scrapy.Spider):
             description += description_temp.strip() + ', '
 
         description = description[:-2]
-        product_id = ''.join(random.sample(string.ascii_lowercase+string.digits,15)) #random 15 len alphanumeric id
-
-        print(product_name, rating, price, colour, instock, photos)
+        ims = response.xpath("//img[@id='main-image-container']/@data-old-hires").getall()
+        print(product_name, rating, price, colour, instock, img_url)
         # print(description)
         # brand = brand.strip(),
         #iurl = iurl, asin = asin, price = ''.join([c for c in price if c in '1234567890.'])[:-3], colour = colour.strip(), instock = instock, rating = rating.strip(),
-        pp = Electr( product_name = product_name.strip(),product_id = product_id ,stores = stores,category = category,subcategory = subcategory, description = description, image_urls = [photos])
-        yield pp
+
+        yield Electr( ims = ims, product_name = product_name.strip(),stores = stores,category = category,subcategory = subcategory, description = description, image_urls = [img_url])

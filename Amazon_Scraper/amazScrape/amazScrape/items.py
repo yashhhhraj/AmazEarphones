@@ -11,6 +11,7 @@ from w3lib.html import remove_tags
 
 
 class Electr(scrapy.Item):
+    ims = scrapy.Field()
     stores = scrapy.Field()
     iurl = scrapy.Field()
     category = scrapy.Field()
@@ -24,3 +25,4 @@ class Electr(scrapy.Item):
     image_urls = scrapy.Field()
     images = scrapy.Field()
     asin = scrapy.Field()
+    product_id = scrapy.Field()
